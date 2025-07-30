@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "De-dup customers by customer_id and keep latest one"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+      - name: customer_email
+      - name: customer_phone
+      - name: customer_address
+      - name: _AIRBYTE_EXTRACTED_AT
+  - name: fct_order_items
+    description: "Join Order , Products, and Customers into one table"
+
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+
+      - name: order_date
+        description: "Date when the order was placed"
+
+      - name: order_qty
+        tests:
+          - not_null
+      
+      - name: customer_id
+        description: "Foreign key to customer"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+
+      - name: product_id
+        description: "Foreign key to product"
+        tests:
+          - not_null
+          - relationships: 
+              to: ref('dim_products')
+              field: product_id 
+           
+      - name: total_price
+        description: "Total price (order_qty * product_price)"
+        tests:
+          - not_null

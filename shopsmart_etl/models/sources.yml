@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: RAW
+    tables:
+      - name: customers
+        loaded_at_field: _AIRBYTE_EXTRACTED_AT
+        config:
+          freshness:
+            error_after:
+              count: 14
+              period: minute
+            warn_after:
+              count: 10
+              period: minute
+
+      - name: orders
+        loaded_at_field: _AIRBYTE_EXTRACTED_AT
+        config:
+          freshness:
+            error_after:
+              count: 3
+              period: hour
+            warn_after:
+              count: 2
+              period: hour
+    
+      - name: products
+        loaded_at_field: _AIRBYTE_EXTRACTED_AT
+        config:
+          freshness:
+            error_after:
+              count: 3
+              period: hour
+            warn_after:
+              count: 2
+              period: hour
